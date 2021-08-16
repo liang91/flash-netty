@@ -10,16 +10,13 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import java.util.Date;
 
 public class NettyServer {
-
     private static final int PORT = 8000;
 
     public static void main(String[] args) {
         NioEventLoopGroup boosGroup = new NioEventLoopGroup();
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
-
         final ServerBootstrap serverBootstrap = new ServerBootstrap();
-        serverBootstrap
-                .group(boosGroup, workerGroup)
+        serverBootstrap.group(boosGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
                 .option(ChannelOption.SO_BACKLOG, 1024)
                 .childOption(ChannelOption.SO_KEEPALIVE, true)
@@ -29,8 +26,6 @@ public class NettyServer {
                         ch.pipeline().addLast(new ServerHandler());
                     }
                 });
-
-
         bind(serverBootstrap, PORT);
     }
 
