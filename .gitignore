@@ -107,6 +107,7 @@ fabric.properties
 .idea/
 blog/
 flash-netty.iml
+*.iml
 target/
 src/main/resources/
 src/test/
