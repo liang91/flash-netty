@@ -7,15 +7,15 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.FixedLengthFrameDecoder;
+import io.netty.handler.codec.LineBasedFrameDecoder;
 
 public class NettyServer {
 
     private static final int PORT = 8000;
 
     public static void main(String[] args) {
-        NioEventLoopGroup boosGroup = new NioEventLoopGroup();
-        NioEventLoopGroup workerGroup = new NioEventLoopGroup();
+        NioEventLoopGroup boosGroup = new NioEventLoopGroup(1);
+        NioEventLoopGroup workerGroup = new NioEventLoopGroup(1);
 
         final ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap
@@ -27,7 +27,7 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     protected void initChannel(NioSocketChannel ch) {
                         ChannelPipeline pipeline = ch.pipeline();
-                        pipeline.addLast(new FixedLengthFrameDecoder(10));
+                        pipeline.addLast(new LineBasedFrameDecoder(100));
                         pipeline.addLast(new FirstServerHandler());
                     }
                 });

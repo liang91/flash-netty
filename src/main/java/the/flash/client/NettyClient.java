@@ -7,7 +7,7 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.FixedLengthFrameDecoder;
+import io.netty.handler.codec.LineBasedFrameDecoder;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -19,7 +19,7 @@ public class NettyClient {
 
 
     public static void main(String[] args) {
-        NioEventLoopGroup workerGroup = new NioEventLoopGroup();
+        NioEventLoopGroup workerGroup = new NioEventLoopGroup(1);
 
         Bootstrap bootstrap = new Bootstrap();
         bootstrap
@@ -32,7 +32,7 @@ public class NettyClient {
                     @Override
                     public void initChannel(SocketChannel ch) {
                         ChannelPipeline pipeline = ch.pipeline();
-                        pipeline.addLast(new FixedLengthFrameDecoder(70));
+                        pipeline.addLast(new LineBasedFrameDecoder(100));
                         pipeline.addLast(new FirstClientHandler());
                     }
                 });
