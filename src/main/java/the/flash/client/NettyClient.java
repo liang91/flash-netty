@@ -3,16 +3,15 @@ package the.flash.client;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.FixedLengthFrameDecoder;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author 闪电侠
- */
 public class NettyClient {
     private static final int MAX_RETRY = 5;
     private static final String HOST = "127.0.0.1";
@@ -32,7 +31,9 @@ public class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     public void initChannel(SocketChannel ch) {
-                        ch.pipeline().addLast(new FirstClientHandler());
+                        ChannelPipeline pipeline = ch.pipeline();
+                        pipeline.addLast(new FixedLengthFrameDecoder(70));
+                        pipeline.addLast(new FirstClientHandler());
                     }
                 });
 
