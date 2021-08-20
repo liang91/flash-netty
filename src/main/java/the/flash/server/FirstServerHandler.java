@@ -12,10 +12,11 @@ public class FirstServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ByteBuf reqBuf = (ByteBuf) msg;
-        System.out.println("服务端收到：" + reqBuf.toString(StandardCharsets.UTF_8));
+//        System.out.println("服务端收到：" + reqBuf.toString(StandardCharsets.UTF_8));
 
         ByteBuf out = genResp(ctx);
         ctx.channel().writeAndFlush(out);
+        reqBuf.release();
     }
 
     private ByteBuf genResp(ChannelHandlerContext ctx) {
