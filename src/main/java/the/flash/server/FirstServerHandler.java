@@ -7,7 +7,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import java.nio.charset.StandardCharsets;
 
 public class FirstServerHandler extends ChannelInboundHandlerAdapter {
-    private int count = 0;
+    private final byte[] bytes = "你好，欢迎关注我的微信公众号，《闪电侠的博客》\n".getBytes(StandardCharsets.UTF_8);
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
@@ -19,8 +19,6 @@ public class FirstServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     private ByteBuf genResp(ChannelHandlerContext ctx) {
-        String msg = "你好，欢迎关注我的微信公众号，《闪电侠的博客》" + ++count + "!\n";
-        byte[] bytes = msg.getBytes(StandardCharsets.UTF_8);
         ByteBuf buf = ctx.alloc().buffer();
         buf.writeBytes(bytes);
         return buf;

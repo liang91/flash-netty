@@ -5,26 +5,19 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.TimeUnit;
 
 public class FirstClientHandler extends ChannelInboundHandlerAdapter {
-    private int count;
+    private byte[] bytes = "are you ok\n".getBytes();
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) {
-        for (int i = 0; i < 10000000; i++) {
-            ctx.channel().writeAndFlush(genReqBuf(ctx));
-            if (i % 1000000 == 0) {
-                System.out.println(i);
-            }
-        }
-    }
-
-    private ByteBuf genReqBuf(ChannelHandlerContext ctx) {
-        String msg = "are you ok "+ ++count +"\n";
-        byte[] bytes = msg.getBytes();
-        ByteBuf buffer = ctx.alloc().buffer();
-        buffer.writeBytes(bytes);
-        return buffer;
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
+        ctx.executor().scheduleAtFixedRate(() -> {
+            ByteBuf byteBuf = ctx.alloc().ioBuffer();
+            byteBuf.writeBytes(bytes);
+            ctx.channel().writeAndFlush(byteBuf);
+        }, 0, 1, TimeUnit.MILLISECONDS);
     }
 
     @Override
